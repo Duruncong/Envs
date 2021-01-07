@@ -1,18 +1,22 @@
 from django.shortcuts import render
+from django.db import models
 from django.http import HttpResponseRedirect, Http404
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
-
 from .models import Topic, Entry
 from .forms import TopicForm, EntryForm
+from users.models import User
 
 
 # Create your views here.
+
+def index_unlog(request):
+    return render(request, 'learning_logs/index_unlog.html')
+
 @login_required
 def index(request):
     """学习笔记的主页"""
     return render(request, 'learning_logs/index.html')
-
 
 @login_required
 def topics(request):
@@ -20,7 +24,6 @@ def topics(request):
     topics = Topic.objects.filter(owner=request.user).order_by('date_added')
     context = {'topics': topics}
     return render(request, 'learning_logs/topics.html', context)
-
 
 @login_required
 def topic(request, topic_id):
@@ -33,7 +36,6 @@ def topic(request, topic_id):
     entries = topic.entry_set.order_by('-date_added')
     context = {'topic': topic, 'entries': entries}
     return render(request, 'learning_logs/topic.html', context)
-
 
 @login_required
 def new_topic(request):
@@ -52,7 +54,6 @@ def new_topic(request):
 
     context = {'form': form}
     return render(request, 'learning_logs/new_topic.html', context)
-
 
 @login_required
 def new_entry(request, topic_id):
@@ -73,7 +74,6 @@ def new_entry(request, topic_id):
 
     context = {'topic': topic, 'form': form}
     return render(request, 'learning_logs/new_entry.html', context)
-
 
 @login_required
 def edit_entry(request, entry_id):

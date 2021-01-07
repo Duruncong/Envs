@@ -11,10 +11,10 @@ https://docs.djangoproject.com/en/3.1/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
-
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
@@ -29,33 +29,61 @@ ALLOWED_HOSTS = []
 # 我的设置
 LOGIN_URL = '/users/login'
 
+STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, 'static'),
+    ]
 # django-bootstrap3的设置
 BOOTSTRAP3 = {
     'include_jquery': True,
 }
 # Application definition
 
+# 指定django认证系统使用的模型类,应用名.类名
+# AUTH_USER_MODEL = "users.User"
+
 INSTALLED_APPS = [
+    'simpleui',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-
+    'django_summernote',
     # 第三方应用程序
     'bootstrap3',
+    'crispy_forms',
 
     # 我的应用程序
     'learning_logs',
     'users',
+
 ]
+CRISPY_TEMPLATE_PACK = 'bootstrap3'
+
+SUMMERNOTE_CONFIG = {
+    # Using SummernoteWidget - iframe mode
+    'iframe': True,  # or set False to use SummernoteInplaceWidget - no iframe mode
+
+    # Using Summernote Air-mode
+    'airMode': False,
+
+    # Use native HTML tags (`<b>`, `<i>`, ...) instead of style attributes
+    'styleWithSpan': False,
+
+    # Change editor size
+    'width': '80%',
+    'height': '480',
+
+    # Use proper language setting automatically (default)
+    'lang': 'zh-CN',
+}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'django.middleware.csrf.CsrfViewMiddleware',
+    # 'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -115,9 +143,9 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/3.1/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'zh-hans'
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = 'Asia/Shanghai'
 
 USE_I18N = True
 

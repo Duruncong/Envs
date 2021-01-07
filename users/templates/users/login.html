@@ -1,43 +1,41 @@
 {% extends 'learning_logs/base.html' %}
 {% load bootstrap3 %}
-
+{% load crispy_forms_tags %}
 {% block body_part %}
-<div class="container" style="margin-top: 3%; margin-left: 20%;">
-	<div class="row clearfix">
-		<div class="col-md-4 column">
-            {% block header %}
-              <h2>Log in to your account.</h2>
-            {% endblock header %}
 
-            {% block content %}
-
-              <form action="{% url 'users:login' %}" method="post">
+<div class="container">
+    <div class="row clearfix">
+        <div class="col-md-8 column">
+            <h2>Login</h2>
+            {% if message %}
+             {{ message }}
+            {% endif %}
+            <div class="form-wrapper">
+               <form method="post" action="" enctype="multipart/form-data">
                   {% csrf_token %}
-                  {% bootstrap_form form %}
-
-                  {% buttons %}
-                    <button name="submit" class="btn btn-inverse btn-block btn-lg">log in</button>
-                  {% endbuttons %}
-
-                  <input type="hidden" name="next" value="{% url 'learning_logs:index' %}" />
-              </form>
-
-            {% endblock content %}
+                  {% for field in form %}
+                       <div class="fieldWrapper">
+                    {{ field.errors }}
+                    {{ field.label_tag }} {{ field }}
+                    {% if field.help_text %}
+                         <p class="help">{{ field.help_text|safe }}</p>
+                    {% endif %}
+                       </div>
+                    {% endfor %}
+                  <div class="button-wrapper submit">
+                     <input type="submit" value="Login" />
+                  </div>
+               </form>
+                <a href="/accounts/register">Register</a>
+            </div>
         </div>
-        <div class="col-md-4 column" style="margin-left: 10%;">
-			<div class="media well">
-				 <a href="#" class="pull-left">
-                     <img src="users/static/img/user.png" class="media-object" alt=''
-				            style="width:48px; height:48px;"/>
-                 </a>
-				<div class="media-body">
-					<h4 class="media-heading">
-						Nested media heading
-					</h4> Cras sit amet nibh libero, in gravida nulla. Nulla vel metus scelerisque ante sollicitudin commodo. Cras purus odio, vestibulum in vulputate at, tempus viverra turpis.
-				</div>
-			</div>
-		</div>
+        <div class="col-md-4 column">
+        </div>
     </div>
 </div>
+
+    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+
 
 {% endblock %}

@@ -1,7 +1,10 @@
 {% extends 'learning_logs/base.html' %}
+{% load bootstrap3 %}
 
-{% block content %}
-
+{% block body_part %}
+<div class="container">
+<div class="row clearfix">
+  <div class="col-md-12 column">
     <p><a href="{% url 'learning_logs:topic' topic.id %}">{{ topic }}</a></p>
 
     <p>Add a new entry:</p>
@@ -10,5 +13,8 @@
         {{ form.as_p }}
         <button name="submit">add entry</button>
     </form>
+  </div>
+</div>
+</div>
 
-{% endblock content%}
+{% endblock %}
