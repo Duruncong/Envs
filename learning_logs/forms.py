@@ -1,17 +1,19 @@
 from django import forms
+from .models import Topic, Entry, ArticleComment
 
-from .models import Topic, Entry
+class ArticleCommentForm(forms.Form):
+    body = forms.CharField(required=True, label="",
+                           error_messages={'required': '...',
+                                           'min_length': '再输入点内容吧'},
+                           min_length=2, widget=forms.Textarea(attrs={'placeholder': '路过匆匆，何不留下您的看法呢....'}))
+    reply_comment_id = forms.IntegerField(widget=forms.HiddenInput(attrs={'id': 'reply_comment_id'}))
 
-class TopicForm(forms.ModelForm):
     class Meta:
-        model = Topic
-        fields = ['text']
-        labels = {'text': ''}
+        model = ArticleComment
+        fields = ['body,user_name']
 
-
-class EntryForm(forms.ModelForm):
-    class Meta:
-        model = Entry
-        fields = ['text']
-        labels = {'text': ''}
-        widgets = {'text': forms.Textarea(attrs={'cols': 80})}
+    def clean_body(self):
+        message = self.cleaned_data['body']
+        if "fuck" in message:
+            raise forms.ValidationError('请文明用语')
+        return message

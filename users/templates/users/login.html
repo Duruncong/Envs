@@ -3,39 +3,31 @@
 {% load crispy_forms_tags %}
 {% block body_part %}
 
-<div class="container">
+<div class="container" style="margin-bottom:250px">
     <div class="row clearfix">
-        <div class="col-md-8 column">
-            <h2>Login</h2>
+        <div class="col-md-4 column">
+        </div>
+        <div class="col-md-4 column">
+            <h2>登陆账户</h2>
             {% if message %}
              {{ message }}
             {% endif %}
-            <div class="form-wrapper">
-               <form method="post" action="" enctype="multipart/form-data">
-                  {% csrf_token %}
-                  {% for field in form %}
-                       <div class="fieldWrapper">
-                    {{ field.errors }}
-                    {{ field.label_tag }} {{ field }}
-                    {% if field.help_text %}
-                         <p class="help">{{ field.help_text|safe }}</p>
-                    {% endif %}
-                       </div>
-                    {% endfor %}
-                  <div class="button-wrapper submit">
-                     <input type="submit" value="Login" />
-                  </div>
-               </form>
-                <a href="/accounts/register">Register</a>
-            </div>
-        </div>
-        <div class="col-md-4 column">
+           <form method="post" action="" enctype="multipart/form-data">
+              <div class="div1">
+                <label>Username:</label><br>
+                  <input class="form-control" type="text" id="username" name="username">
+                <label>Password:</label><br>
+                  <input class="form-control" type="password" id="password" name="password">
+                <div id="errmsg"></div>
+               <br>
+               <button type="submit" class="btn btn-lg btn-block input-control">登陆</button>
+               <br>
+               <a href="{% url 'users:forget' %}">忘记密码</a>
+               <a style="float:right;" href="{% url 'users:register' %}">注册账户</a>
+               </div>
+           </form>
         </div>
     </div>
 </div>
-
-    <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
-    <script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
-
 
 {% endblock %}

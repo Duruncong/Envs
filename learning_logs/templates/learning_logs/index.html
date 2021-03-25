@@ -1,45 +1,153 @@
-{% extends "learning_logs/base.html" %}
 {% load bootstrap3 %}
+{% load static %}
 
-{% block body_part %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="{% static 'css/all.css' %}">
+	<link rel="stylesheet" type="text/css" href="{% static 'css/bootstrap.min.css' %}">
+	<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+
+    <title>Learning Log</title>
+
+    {% bootstrap_css %}
+    {% bootstrap_javascript %}
+
+</head>
+<body>
+<div class="jumbotron text-center" style="margin-bottom:0">
+	<h1>欢迎来到我的个人博客</h1>
+	<p>Welcome to my personal blog！</p>
+	<h3>极简主义</h3>
+</div>
+
+			<nav class="navbar navbar-default navbar-inverse">
+				<div class="navbar-header">
+					 <button type="button" class="navbar-toggle" data-toggle="collapse"
+							 data-target="#bs-example-navbar-collapse-1">
+                         <span class="sr-only">Toggle navigation</span>
+                         <span class="icon-bar"></span>
+                         <span class="icon-bar"></span>
+                         <span class="icon-bar"></span>
+                     </button>
+
+						<a class="navbar-brand" href="{%url 'learning_logs:index' %}">
+                    		Learning Log</a>
+				</div>
+
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+					<ul class="nav navbar-nav">
+						<li>
+							 <a href="{% url 'learning_logs:articles' %}">Articles</a>
+						</li>
+						<li class="active">
+							 <a href="#">暂定</a>
+						</li>
+						<li class="dropdown">
+							 <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown<strong class="caret"></strong></a>
+							<ul class="dropdown-menu">
+								<li>
+									 <a href="#">Action</a>
+								</li>
+								<li>
+									 <a href="#">Another action</a>
+								</li>
+								<li>
+									 <a href="#">Something else here</a>
+								</li>
+								<li class="divider">
+								</li>
+								<li>
+									 <a href="#">Separated link</a>
+								</li>
+								<li class="divider">
+								</li>
+								<li>
+									 <a href="#">One more separated link</a>
+								</li>
+							</ul>
+						</li>
+					</ul>
+					<form class="navbar-form navbar-right" method="post" role="search" style="margin-right:100px;"
+						  action="{%url 'learning_logs:search' %}">
+						<div class="form-group">
+							<input type="text" name="info" class="form-control" placeholder="关键字"/>
+						</div> <button type="submit" class="btn btn-default">Submit</button>
+					</form>
+					<ul class="nav navbar-nav navbar-right">
+                    {% if user.is_authenticated %}
+						<li><img src="{{ userprofile.photo }}" width="50px;" ></li>
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">
+								Hello, {{ user.username }}
+								<b class="caret"></b>
+							</a>
+							<ul class="dropdown-menu">
+								<li><a href="{% url 'users:myinfo' user.id%}">个人中心</a></li>
+
+							</ul>
+						</li>
+<!--                      <li><a>Hello, {{ user.username }}</a></li>-->
+                      <li><a href="{% url 'users:logout' %}">log out</a></li>
+                    {% else %}
+                      <li><a href="{% url 'users:register' %}">register</a></li>
+                      <li><a href="{% url 'users:login' %}">log in</a></li>
+                    {% endif %}
+                    </ul>
+				</div>
+
+			</nav>
 
 <div class="container">
-	<div class="row clearfix">
-		<div class="col-md-12 column">
-            {% block header %}
-              <div class="jumbotron">
-                <h1>Track your learning.</h1>
-              </div>
-            {% endblock header %}
-
-            {% block content %}
-              <h2>
-                  Successfully!
-              </h2>
-              <h2>
-                  Whenever you learn something new about a topic, make an entry.
-                  summarizing what you're learned.
-              </h2>
-            {% endblock content %}
-		</div>
-	</div>
+  <div class="row">
+    <div class="col-sm-3">
+      <h2>关于我</h2>
+      <div class="fakeimg"><img src="{% static 'images/me.jpg' %}"></div>
+        <br>
+      <p>一个正在奋斗的新青年</p>
+      <h3>链接</h3>
+      <p>您可能感兴趣的</p>
+      <ul class="nav nav-pills nav-stacked">
+        <li class="active"><a href="{% url 'learning_logs:articles' %}" style="background:#343434">文章</a></li>
+        <li><a href="#" style="text-decoration: none;
+                               color:#000000;
+                               font-size: 15px;">标签</a></li>
+        <li><a href="#" style="text-decoration: none;
+                               color:#000000;
+                               font-size: 15px;">关于</a></li>
+      </ul>
+      <hr class="hidden-sm hidden-md hidden-lg">
+    </div>
+    <div class="col-sm-9">
+      <div class="jumbotron">
+				<h1>
+					Hello, world!
+				</h1>
+				<p>
+					This is a template for a simple marketing or informational website. It includes a large callout called the hero unit and three supporting pieces of content. Use it as a starting point to create something more unique.
+				</p>
+				<p>
+					 <a class="btn btn-primary btn-large" href="#">Learn more</a>
+				</p>
+			</div>
+    </div>
+  </div>
 </div>
-{% endblock %}
-
-
-
-
-
-
-<!--<!DOCTYPE html>-->
-<!--<html lang="en">-->
-<!--<head>-->
-<!--    <meta charset="UTF-8">-->
-<!--    <title>Learning Log</title>-->
-<!--</head>-->
-<!--<body>-->
-<!--    <p>-->
-<!--        Learning Log helps you keep track of your learning, for any topic you're learning about.-->
-<!--    </p>-->
-<!--</body>-->
-<!--</html>-->
+<div class="jumbotron text-center" style="margin-bottom:0">
+  <p>底部内容</p>
+</div>
+<!--<div class="container">-->
+<!--	<div class="row clearfix">-->
+<!--		<div class="col-md-12 column">-->
+<!--			<nav class="navbar navbar-inverse navbar-fixed-bottom">&lt;!&ndash;贴在底部，不会消失&ndash;&gt;-->
+<!--				<div style="height:100px; text-align:center;">版权所有</div>-->
+<!--			</nav>-->
+<!--		</div>-->
+<!--	</div>-->
+<!--</div>-->
+</body>
+</html>

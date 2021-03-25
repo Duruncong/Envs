@@ -6,20 +6,23 @@ from . import views
 app_name = 'learning_logs'
 urlpatterns = [
     # 主页
-    path('', views.index_unlog, name='index_unlog'),
-    path('in/', views.index, name='index'),
-    # 显示所有的主题
-    path('topics/', views.topics, name='topics'),
+    path('', views.index, name='index'),
+    # 显示所有的文章
+    path('articles/', views.articles, name='articles'),
+    # 加载更多
+    path('articles/more', views.loadmore, name='loadmore'),
+    # 详情
+    path('articles/<int:id>/', views.detail, name='detail'),
+    # 分类
+    path('category/<int:id>/', views.category, name='category'),
+    # 标签
+    path('tags/<int:id>/', views.tags, name='tags'),
+    # 归档
+    path('archives/<int:year>/<int:month>/', views.archives, name='archives'),
 
-    # 特定主题的详细页面
-    re_path(r'^topics/(?P<topic_id>\d+)/$', views.topic, name='topic'),
+    path('commentpost',views.commentpost,name='commentpost'),
 
-    # 用于添加新主题的网页
-    path('new_topic/', views.new_topic, name='new_topic'),
-
-    # 用于添加新条目的页面
-    re_path(r'^new_entry/(?P<topic_id>\d+)/$', views.new_entry, name='new_entry'),
-
-    # 用于编辑条目的页面
-    re_path(r'^edit_entry/(?P<entry_id>\d+)/$', views.edit_entry, name='edit_entry')
+    path('commentdel',views.comment_del,name='comment_del'),
+    # 搜索
+    path('search/',views.search,name='search'),
 ]

@@ -1,30 +1,101 @@
 from django.db import models
 from users.models import User
+from django.utils.timezone import now
 
 # Create your models here.
-class Topic(models.Model):
-    """用户学习的主题"""
-    text = models.CharField(max_length=200)
-    date_added = models.DateTimeField(auto_now_add=True)
-    owner = models.ForeignKey(User, on_delete=models.CASCADE)
+# ---------------------------------文章评论---------------------------------------
+class ArticleComment(models.Model):
+    body = models.TextField()
+    username = models.CharField(max_length=50)
+    userimg = models.CharField(max_length=70)
+    createtime = models.DateTimeField(verbose_name='创建时间', default=now)
+    article = models.CharField(max_length=50)
+    title = models.CharField(max_length=50)
+    # root_id = models.IntegerField(default=0)
+    # reply_to = models.IntegerField(default=0)
+    # reply_name = models.CharField(max_length=50, blank=True)
+    # user = models.ForeignKey(User, related_name="comments", on_delete=models.DO_NOTHING)
+    # root = models.ForeignKey('self', related_name='root_comment', null=True, blank=True, on_delete=models.DO_NOTHING)
+    #
+    # parent = models.ForeignKey('self', related_name='parent_comment', blank=True, null=True,
+    #                            on_delete=models.DO_NOTHING)
+    # reply_to = models.ForeignKey(User, related_name="replies", blank=True, null=True, on_delete=models.DO_NOTHING)
 
+    # 使对象在后台显示更友好
     def __str__(self):
-        """返回模型的字符串表示"""
-        return self.text
-
-
-class Entry(models.Model):
-    """学到的有关某个主题的具体知识"""
-    topic = models.ForeignKey(Topic, on_delete=models.CASCADE)
-    text = models.TextField()
-    date_added = models.DateTimeField(auto_now_add=True)
+        return self.article
 
     class Meta:
-        verbose_name_plural = 'entries'
+        ordering = ['-createtime']
+        verbose_name = '评论'  # 指定后台显示模型名称
+        verbose_name_plural = '评论列表'  # 指定后台显示模型复数名称
+        db_table = "comment"  # 数据库表名
 
+    list_display = ('article', 'body')
+
+# ---------------------------------博客文章标签---------------------------------------
+class Tag(models.Model):
+    name = models.CharField(verbose_name='标签名', max_length=64)
+
+    # 使对象在后台显示更友好
     def __str__(self):
-        """返回模型的字符串表示"""
-        if len(str(self.text)) < 50:
-            return self.text
-        else:
-            return self.text[:50] + "... "
+        return self.name
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = '标签名称'  # 指定后台显示模型名称
+        verbose_name_plural = '标签列表'  # 指定后台显示模型复数名称
+        db_table = "tag"  # 数据库表名
+
+# ---------------------------------博客文章分类---------------------------------------
+class Category(models.Model):
+    name = models.CharField(verbose_name='类别名称', max_length=64)
+
+    class Meta:
+        ordering = ['name']
+        verbose_name = "类别名称"
+        verbose_name_plural = '分类列表'
+        db_table = "category"  # 数据库表名
+
+    # 使对象在后台显示更友好
+    def __str__(self):
+        return self.name
+
+# ---------------------------------博客文章---------------------------------------
+class Article(models.Model):
+    STATUS_CHOICES = (
+        ('d', '草稿'),
+        ('p', '发表'),
+    )
+    article_id = models.CharField(verbose_name='标号', max_length=100)
+    title = models.CharField(verbose_name='标题', max_length=100)
+    content = models.TextField(verbose_name='正文', blank=True, null=True)
+    status = models.CharField(verbose_name='状态', max_length=1, choices=STATUS_CHOICES, default='p')
+    views = models.PositiveIntegerField(verbose_name='浏览量', default=0)
+    created_time = models.DateTimeField(verbose_name='创建时间', default=now)
+    category = models.ForeignKey(Category, verbose_name='分类', on_delete=models.CASCADE, blank=False, null=False)
+    tags = models.ManyToManyField(Tag, verbose_name='标签集合', blank=True)
+
+    # 使对象在后台显示更友好
+    def __str__(self):
+        return self.title
+
+    # 更新浏览量
+    def viewed(self):
+        self.views += 1
+        self.save(update_fields=['views'])
+
+    # 下一篇
+    def next_article(self):  # id比当前id大，状态为已发布，发布时间不为空
+        return Article.objects.filter(id__gt=self.id, status='p', pub_time__isnull=False).first()
+
+    # 前一篇
+    def prev_article(self):  # id比当前id小，状态为已发布，发布时间不为空
+        return Article.objects.filter(id__lt=self.id, status='p', pub_time__isnull=False).first()
+
+    class Meta:
+        ordering = ['-created_time']  # 按文章创建日期降序
+        verbose_name = '文章'  # 指定后台显示模型名称
+        verbose_name_plural = '文章列表'  # 指定后台显示模型复数名称
+        db_table = 'article'  # 数据库表名
+        get_latest_by = 'created_time'

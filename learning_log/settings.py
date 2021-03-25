@@ -14,7 +14,7 @@ from pathlib import Path
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve().parent.parent
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.1/howto/deployment/checklist/
 
@@ -26,16 +26,6 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-# 我的设置
-LOGIN_URL = '/users/login'
-
-STATICFILES_DIRS = [
-        os.path.join(BASE_DIR, 'static'),
-    ]
-# django-bootstrap3的设置
-BOOTSTRAP3 = {
-    'include_jquery': True,
-}
 # Application definition
 
 # 指定django认证系统使用的模型类,应用名.类名
@@ -49,35 +39,17 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'django_summernote',
     # 第三方应用程序
     'bootstrap3',
     'crispy_forms',
-
     # 我的应用程序
     'learning_logs',
     'users',
 
+    'django_summernote',#后台富文本
+
 ]
 CRISPY_TEMPLATE_PACK = 'bootstrap3'
-
-SUMMERNOTE_CONFIG = {
-    # Using SummernoteWidget - iframe mode
-    'iframe': True,  # or set False to use SummernoteInplaceWidget - no iframe mode
-
-    # Using Summernote Air-mode
-    'airMode': False,
-
-    # Use native HTML tags (`<b>`, `<i>`, ...) instead of style attributes
-    'styleWithSpan': False,
-
-    # Change editor size
-    'width': '80%',
-    'height': '480',
-
-    # Use proper language setting automatically (default)
-    'lang': 'zh-CN',
-}
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -103,6 +75,9 @@ TEMPLATES = [
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
             ],
+        'libraries': {
+                 'my_tags':  'learning_logs.templatetags.extras',
+            },
         },
     },
 ]
@@ -116,7 +91,7 @@ WSGI_APPLICATION = 'learning_log.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
 
@@ -147,6 +122,12 @@ LANGUAGE_CODE = 'zh-hans'
 
 TIME_ZONE = 'Asia/Shanghai'
 
+PAGE_NUM = 4  #主页显示文章数
+
+COMMENT_NUM =10
+
+TAG_NUM = 10   #标签页显示标签数
+
 USE_I18N = True
 
 USE_L10N = True
@@ -155,5 +136,34 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
-
 STATIC_URL = '/static/'
+
+# 我的设置
+LOGIN_URL = '/users/login'
+
+STATICFILES_DIRS = [
+        os.path.join(BASE_DIR, 'static'),
+    ]
+
+# django-bootstrap3的设置
+BOOTSTRAP3 = {
+    'include_jquery': True,
+}
+
+SUMMERNOTE_CONFIG = {
+    # Using SummernoteWidget - iframe mode
+    'iframe': True,  # or set False to use SummernoteInplaceWidget - no iframe mode
+
+    # Using Summernote Air-mode
+    'airMode': False,
+
+    # Use native HTML tags (`<b>`, `<i>`, ...) instead of style attributes
+    'styleWithSpan': False,
+
+    # Change editor size
+    'width': '80%',
+    'height': '480',
+
+    # Use proper language setting automatically (default)
+    'lang': 'zh-CN',
+}

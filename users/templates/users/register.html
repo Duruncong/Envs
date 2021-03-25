@@ -5,32 +5,41 @@
 
 <div class="container">
 	<div class="row clearfix">
-		<div class="col-md-12 column">
-			<div class="row clearfix">
-				<div class="col-md-8 column">
-                    <div class="form-wrapper">
-                       <form method="post" action="" enctype="multipart/form-data">
-                          {% csrf_token %}
-                          {% for field in form %}
-                               <div class="fieldWrapper">
-                            {{ field.errors }}
-                            {{ field.label_tag }} {{ field }}
-                            {% if field.help_text %}
-                                 <p class="help">{{ field.help_text|safe }}</p>
-                            {% endif %}
-                               </div>
-                            {% endfor %}
-                          <div class="button-wrapper submit">
-                             <input type="submit" value="Submit" />
-                          </div>
-                       </form>
-                    </div>
-				</div>
-				<div class="col-md-4 column">
-				</div>
-			</div>
-		</div>
-	</div>
+        <div class="col-md-4 column">
+        </div>
+        <div class="col-md-4 column">
+                        <h2>注册账户</h2>
+           {% if message %}
+            {{ message }}
+           {% endif %}
+           <form method="post" action="" enctype="multipart/form-data">
+              {% csrf_token %}
+              {% for field in form %}
+                   <div class="fieldWrapper">
+                {{ field.errors }}
+                {{ field.label_tag }} {{ field }}
+                {% if field.help_text %}
+                     <p class="help">{{ field.help_text|safe }}</p>
+                {% endif %}
+                   </div>
+                {% endfor %}
+               {{ error }}
+               <div>头像<input type="file" name="photo"></div>
+               <br>
+               <button type="submit" class="btn btn-lg btn-block input-control">Register</button>
+               <br>
+<!--                     <input type="submit" value="Login" />-->
+               <a href="{% url 'users:login' %}">已有账户</a>
+           </form>
+<!--                        <form action="" method="post" novalidate>-->
+<!--							{% csrf_token %}-->
+<!--							<div>-->
+<!--								<label for="id_{{ form.name.name }}">Username</label>-->
+<!--								{{ form.name }}<span>{{ form.name.errors.0 }}</span>-->
+<!--							</div>-->
+<!--						</form>-->
+        </div>
+    </div>
 </div>
 
 {% endblock %}
